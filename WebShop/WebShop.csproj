@@ -1,0 +1,41 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20180503070144_AddUsers.cs" />
+    <Compile Remove="Migrations\20180503070144_AddUsers.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="webapp\src\inject.ts" />
+    <None Remove="webapp\src\InjectTest.tsx" />
+    <None Remove="webapp\src\misc\typingsTest.ts" />
+    <None Remove="webapp\src\callApi.tsx" />
+    <None Remove="webapp\src\LoginStatus.tsx" />
+    <None Remove="webapp\src\RootStore.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="webapp\src\Inject.ts" />
+    <TypeScriptCompile Include="webapp\src\InjectTest.tsx" />
+    <TypeScriptCompile Include="webapp\src\misc\typingsTest.ts" />
+    <TypeScriptCompile Include="webapp\src\callApi.tsx" />
+    <TypeScriptCompile Include="webapp\src\LoginStatus.tsx" />
+    <TypeScriptCompile Include="webapp\src\RootStore.ts" />
+  </ItemGroup>
+
+</Project>

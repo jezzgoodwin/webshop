@@ -1,0 +1,23 @@
+﻿
+
+better inject methodology without using optional prop
+
+---
+
+single api http endpoint
+ - use reflection to call c# endpoint
+ - throw exceptions to report errors
+   - check exceptions work with async calls
+
+typings from c# dto to typescript interfaces
+ - use reflection
+ - convert pascal case to camcel case
+
+---
+
+image uploading / resizing
+
+in memory caching (of some description)
+ - session tokens
+
+signalr subscription (only for authenticated users)
