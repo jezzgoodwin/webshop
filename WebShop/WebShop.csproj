@@ -11,12 +11,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="webapp\src\App\App.tsx" />
+    <None Remove="webapp\src\App\AppStore.ts" />
     <None Remove="webapp\src\inject.ts" />
-    <None Remove="webapp\src\InjectTest.tsx" />
+    <None Remove="webapp\src\Login\LoginStore.ts" />
+    <None Remove="webapp\src\Login\Status.tsx" />
     <None Remove="webapp\src\misc\typingsTest.ts" />
     <None Remove="webapp\src\callApi.tsx" />
-    <None Remove="webapp\src\LoginStatus.tsx" />
-    <None Remove="webapp\src\RootStore.ts" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,12 +31,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="webapp\src\App\App.tsx" />
+    <TypeScriptCompile Include="webapp\src\App\AppStore.ts" />
     <TypeScriptCompile Include="webapp\src\Inject.ts" />
-    <TypeScriptCompile Include="webapp\src\InjectTest.tsx" />
+    <TypeScriptCompile Include="webapp\src\Login\LoginStore.ts" />
+    <TypeScriptCompile Include="webapp\src\Login\Status.tsx" />
     <TypeScriptCompile Include="webapp\src\misc\typingsTest.ts" />
     <TypeScriptCompile Include="webapp\src\callApi.tsx" />
-    <TypeScriptCompile Include="webapp\src\LoginStatus.tsx" />
-    <TypeScriptCompile Include="webapp\src\RootStore.ts" />
   </ItemGroup>
 
 </Project>

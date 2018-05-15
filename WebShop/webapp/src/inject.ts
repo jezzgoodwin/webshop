@@ -15,6 +15,17 @@ export class Component<TInject, TProps> extends React.PureComponent<TProps> {
     protected injects: TInject;
     constructor(props: any, context: any) {
         super(props, context);
-        this.injects = (this as any).__proto__.constructor.injectFunc(context.mobxStores);
+        this.injects = (this as any).__proto__.constructor.injectFunc(context.mobxStores.rootStore);
     }
 };
+
+export class RootStore {
+    private injects: { [key: string]: any } = {};
+    set(key: string, value: any) {
+        this.injects[key] = value;
+    }
+    get(key: string) {
+        return this.injects[key];
+    }
+}
+
