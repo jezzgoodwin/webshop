@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Contracts;
 using WebShop.Models;
+using WebShop.TypeReflect;
 
 namespace WebShop.Controllers
 {
@@ -24,24 +25,24 @@ namespace WebShop.Controllers
             _context = context;
         }
 
-        [HttpGet("Login")]
-        public async Task<SuccessDto> Login(string Username, string Password, CancellationToken cancellationToken)
+        [Api]
+        public async Task<SuccessDto> Login(LoginDto credentials, CancellationToken cancellationToken)
         {
 
             // check user
             var isValid = false;
             User user = null;
 
-            if (Username != null && Username != "" && Password != null && Password != "")
+            if (credentials.Username != null && credentials.Username != "" && credentials.Password != null && credentials.Password != "")
             {
                 user = await _context.Users
-                    .SingleOrDefaultAsync(x => x.Username == Username, cancellationToken);
+                    .SingleOrDefaultAsync(x => x.Username == credentials.Username, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
                 if (user != null)
                 {
                     
                     byte[] salt = Convert.FromBase64String(user.Salt);
-                    var pbkdf2 = new Rfc2898DeriveBytes(Password, salt, 10000);
+                    var pbkdf2 = new Rfc2898DeriveBytes(credentials.Password, salt, 10000);
                     var hash = pbkdf2.GetBytes(20);
                     var checkPassword = Convert.ToBase64String(hash);
                     if (checkPassword == user.Password)

@@ -6,9 +6,12 @@ using WebShop.TypeReflect;
 
 namespace WebShop.Contracts
 {
-    [Dto]
-    public class SuccessDto
+
+    [TypeReflect.Enum]
+    public enum UserType
     {
-        public bool Success { get; set; }
+        Visitor = 3,
+        Admin = 7
     }
+    
 }

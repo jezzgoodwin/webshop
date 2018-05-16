@@ -1,9 +1,5 @@
 ﻿
 
-better inject methodology without using optional prop
-
----
-
 single api http endpoint
  - use reflection to call c# endpoint
  - throw exceptions to report errors

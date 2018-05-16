@@ -20,12 +20,31 @@ export class Component<TInject, TProps> extends React.PureComponent<TProps> {
 };
 
 export class RootStore {
+
     private injects: { [key: string]: any } = {};
+
     set(key: string, value: any) {
-        this.injects[key] = value;
+
+        // find injects
+        var cnst: string = value.toString();
+        var lb = cnst.split("(", 2);
+        var rb = lb[1].split(")", 2);
+        var parts = rb[0].split(",");
+        var words = parts.map(x => x.trim()).filter(x => x != "");
+
+        console.log(words);
+        var injects = words.map(x => this.injects[x]);
+
+        // create object
+        var object = new value(...injects);
+        this.injects[key] = object;
     }
+
     get(key: string) {
         return this.injects[key];
     }
+
 }
 
+export const instanceRootStore = new RootStore();
+export const set = (key: string, value: any) => instanceRootStore.set(key, value);

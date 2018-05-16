@@ -7,14 +7,11 @@ using WebShop.TypeReflect;
 namespace WebShop.Contracts
 {
     [Dto]
-    public class ProductDto
+    public class LoginDto
     {
-
-        public int Id { get; set; }
-        public string Name { get; set; }
-
+        public string Username { get; set; }
+        public string Password { get; set; }
         [Optional]
-        public List<CategoryDto> Categories { get; set; }
-
+        public Dictionary<string, ProductDto> Favourites { get; set; }
     }
 }

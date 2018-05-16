@@ -7,6 +7,7 @@ using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using WebShop.TypeReflect;
 
 namespace WebShop
 {
@@ -14,6 +15,10 @@ namespace WebShop
     {
         public static void Main(string[] args)
         {
+
+            var generate = new Generate();
+            generate.Run();
+
             BuildWebHost(args).Run();
         }
 

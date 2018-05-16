@@ -1,5 +1,6 @@
 ﻿import { observable, action } from 'mobx';
 import callApi from '../callApi';
+import { AppStore } from '../App/AppStore';
 
 export class LoginStore {
 
@@ -10,6 +11,11 @@ export class LoginStore {
     @observable loginDialogOpen: boolean = false;
     @observable loginDialogUsername: string = "";
     @observable loginDialogPassword: string = "";
+
+    constructor(
+        private appStore: AppStore
+    ) {
+    }
 
     @action
     async componentCreated() {
@@ -22,6 +28,7 @@ export class LoginStore {
 
     @action
     private loginStatusReceived = (isLoggedIn: boolean) => {
+        console.log("login status received with timer at " + this.appStore.timer);
         this.isFetchingLoginStatus = false;
         this.hasLoginStatus = true;
         this.isLoggedIn = isLoggedIn;

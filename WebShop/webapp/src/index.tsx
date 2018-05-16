@@ -6,17 +6,15 @@ import * as Inject from './Inject';
 import { AppStore } from './App/AppStore';
 import { LoginStore } from './Login/LoginStore';
 import App from './App/App';
-
 configure({
     enforceActions: true
 });
 
-const rootStore = new Inject.RootStore();
-rootStore.set("appStore", new AppStore());
-rootStore.set("loginStore", new LoginStore());
+Inject.set("appStore", AppStore);
+Inject.set("loginStore", LoginStore);
 
 ReactDOM.render(
-    <Provider rootStore={rootStore}>
+    <Provider rootStore={Inject.instanceRootStore}>
         <App />
     </Provider>,
     document.getElementById('root'));
