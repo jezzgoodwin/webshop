@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace WebShop.TypeReflect
@@ -27,8 +28,9 @@ namespace WebShop.TypeReflect
         private string BaseName { get; } = "WebShop.";
         private List<Line> Lines { get; } = new List<Line>();
         private string CurrentNamespace { get; set; } = null;
+        private bool NeedsDictionary { get; set; } = false;
 
-        public void Run()
+        public void Run(string saveFilename)
         {
             Console.WriteLine("TypeReflect run");
 
@@ -40,13 +42,14 @@ namespace WebShop.TypeReflect
 
             foreach (var en in enums)
             {
-                Console.WriteLine("enum = " + en.FullName);
+                OpenDef("enum", en.FullName);
                 var fields = en.GetFields();
                 foreach (var field in fields)
                 {
                     if (field.Name.Equals("value__")) continue;
-                    Console.WriteLine("  " + field.Name + " = " + field.GetRawConstantValue());
+                    AddLine(0, field.Name + " = " + field.GetRawConstantValue() + ",");
                 }
+                CloseDef();
             }
 
             var dtos = Assembly.GetExecutingAssembly()
@@ -56,7 +59,7 @@ namespace WebShop.TypeReflect
 
             foreach (var dto in dtos)
             {
-                OpenInterface(dto.FullName);
+                OpenDef("interface", dto.FullName);
                 var props = dto.GetProperties();
                 foreach (var prop in props)
                 {
@@ -68,10 +71,11 @@ namespace WebShop.TypeReflect
                     line += ": " + TypeName(prop.PropertyType) + ";";
                     AddLine(0, line);
                 }
-                CloseInterface();
+                CloseDef();
             }
 
             CloseNamespace();
+
             AddLine(1, "export type ApiMap = {");
             var types = Assembly.GetExecutingAssembly()
                 .GetTypes();
@@ -82,18 +86,48 @@ namespace WebShop.TypeReflect
                     .ToArray();
                 foreach (var api in apis)
                 {
+
+                    var query = "";
+                    var parameters = api.GetParameters();
+                    if (parameters.Count() == 0)
+                    {
+                        query = "null";
+                    }
+                    else
+                    {
+                        var first = parameters.First().ParameterType;
+                        if (first.Equals(typeof(CancellationToken)))
+                        {
+                            query = "null";
+                        }
+                         else
+                        {
+                            query = TypeName(first);
+                        }
+                    }
+
+                    var result = "";
+                    if (api.ReturnType.IsGenericType)
+                    {
+                        result = TypeName(api.ReturnType.GenericTypeArguments.First());
+                    }
+                    else
+                    {
+                        result = "null";
+                    }
+
                     AddLine(1, "\"" + RemoveBase(type.FullName) + "." + api.Name + "\": {");
-                    AddLine(0, "query: " + TypeName(api.GetParameters().First().ParameterType) + ",");
-                    AddLine(0, "result: " + TypeName(api.ReturnType.GenericTypeArguments.First()));
+                    AddLine(0, "query: " + query + ",");
+                    AddLine(0, "result: " + result);
                     AddLine(-1, "},");
                 }
             }
             AddLine(-1, "}");
 
-            Write();
+            if (NeedsDictionary)
+                AddLine(0, "interface ReadonlyDictionary<T> { readonly [index: string]: T; }");
 
-            var file = Directory.GetCurrentDirectory().ToString() + @"\webapp\src\contracts.ts";
-            Console.WriteLine(file);
+            Write(saveFilename);
 
         }
 
@@ -123,17 +157,17 @@ namespace WebShop.TypeReflect
             }
         }
 
-        private void OpenInterface(string fullName)
+        private void OpenDef(string type, string fullName)
         {
             var tree = fullName.Split(".");
             var name = tree.Last();
             var list = tree.ToList();
             list.RemoveAt(tree.Count() - 1);
             OpenNamespace(RemoveBase(String.Join(".", list)));
-            AddLine(1, "export interface " + name + " {");
+            AddLine(1, "export " + type + " " + name + " {");
         }
 
-        private void CloseInterface()
+        private void CloseDef()
         {
             AddLine(-1, "}");
         }
@@ -152,23 +186,24 @@ namespace WebShop.TypeReflect
             {
                 return "string";
             }
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>))
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
+            {
+                NeedsDictionary = true;
+                var genericTypes = type.GenericTypeArguments;
+                var inner = TypeName(genericTypes[1]);
+                return "ReadonlyDictionary<" + inner + ">";
+            }
+            if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || type.GetGenericTypeDefinition() == typeof(List<>)))
             {
                 var genericTypes = type.GenericTypeArguments;
                 var inner = TypeName(genericTypes[0]);
                 return "ReadonlyArray<" + inner + ">";
             }
-            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
-            {
-                var genericTypes = type.GenericTypeArguments;
-                var inner = TypeName(genericTypes[1]);
-                return "ReadonlyDictionary<" + inner + ">";
-            }
             if (type.FullName.Substring(0, BaseName.Length) == BaseName)
             {
                 return RemoveBase(type.FullName);
             }
-            throw new Exception("TypeReflect: Cannot workout type name");
+            throw new Exception("TypeReflect: Cannot workout type name " + type.FullName);
         }
 
         private string ToCamel(string text)
@@ -184,8 +219,9 @@ namespace WebShop.TypeReflect
             }
             return text;
         }
-        private void Write()
+        private void Write(string saveFilename)
         {
+            var output = new List<string>();
             var indent = 0;
             foreach (var line in Lines)
             {
@@ -203,8 +239,24 @@ namespace WebShop.TypeReflect
                 {
                     indent += line.Tab;
                 }
-                Console.WriteLine(draw);
+                output.Add(draw);
             }
+
+            var text = String.Join("\r\n", output);
+            var save = true;
+            if (File.Exists(saveFilename))
+            {
+                var current = File.ReadAllText(saveFilename);
+                if (current == text)
+                {
+                    save = false;
+                }
+            }
+            if (save)
+            {
+                File.WriteAllText(saveFilename, text);
+            }
+
         }
 
     }

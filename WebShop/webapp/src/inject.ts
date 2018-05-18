@@ -32,7 +32,6 @@ export class RootStore {
         var parts = rb[0].split(",");
         var words = parts.map(x => x.trim()).filter(x => x != "");
 
-        console.log(words);
         var injects = words.map(x => this.injects[x]);
 
         // create object

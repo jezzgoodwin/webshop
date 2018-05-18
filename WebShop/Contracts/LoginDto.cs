@@ -11,7 +11,5 @@ namespace WebShop.Contracts
     {
         public string Username { get; set; }
         public string Password { get; set; }
-        [Optional]
-        public Dictionary<string, ProductDto> Favourites { get; set; }
     }
 }

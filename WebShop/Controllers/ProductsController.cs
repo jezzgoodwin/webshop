@@ -8,24 +8,24 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Models;
 using WebShop.Contracts;
+using WebShop.TypeReflect;
 
 namespace WebShop.Controllers
 {
-    [Route("api/[controller]")]
-    public class ProductsController : ControllerBase
+    public class ProductsController
     {
 
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContext DatabaseContext;
 
-        public ProductsController(DatabaseContext context)
+        public ProductsController(DatabaseContext databaseContext)
         {
-            _context = context;
+            DatabaseContext = databaseContext;
         }
 
-        [HttpGet()]
+        [Api]
         public async Task<IEnumerable<ProductDto>> GetAll(CancellationToken cancellationToken)
         {
-            var products = await _context.Products
+            var products = await DatabaseContext.Products
                 .Include(product => product.ProductCategoryJunctions)
                     .ThenInclude(junction => junction.Category)
                 .ToListAsync(cancellationToken);
@@ -47,30 +47,16 @@ namespace WebShop.Controllers
 
         }
 
-        [HttpGet("categories")]
-        [Authorize]
+        [Api]
         public async Task<IEnumerable<CategoryDto>> GetAllCategories(CancellationToken cancellationToken)
         {
-            return await _context.Categories.Select(category => new CategoryDto()
+            return await DatabaseContext.Categories.Select(category => new CategoryDto()
             {
                 Id = category.Id,
                 Name = category.Name
             })
             .ToListAsync(cancellationToken);
 
-        }
-
-        [HttpGet("passthrough")]
-        public IActionResult Passthrough(string Json)
-        {
-            try
-            {
-                var input = Newtonsoft.Json.JsonConvert.DeserializeObject<CategoryDto>(Json);
-                return Ok(input);
-            } catch (Exception e)
-            {
-                return BadRequest(e);
-            }
         }
 
     }

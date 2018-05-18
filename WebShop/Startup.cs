@@ -14,8 +14,10 @@ using Microsoft.Extensions.Options;
 using Microsoft.EntityFrameworkCore;
 using WebShop.Models;
 using WebShop.Other;
+using WebShop.Controllers;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using Microsoft.AspNetCore.Http;
 
 namespace WebShop
 {
@@ -46,7 +48,9 @@ namespace WebShop
                 options.UseSqlServer(connection);
             });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<CustomCookieAuthenticationEvents>();
+            services.AddScoped<AccountController>();
 
         }
 

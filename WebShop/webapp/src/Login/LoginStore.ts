@@ -21,7 +21,7 @@ export class LoginStore {
     async componentCreated() {
         if (!this.isFetchingLoginStatus) {
             this.isFetchingLoginStatus = true;
-            const result = await callApi("Account/IsLoggedIn", {});
+            const result = await callApi("Controllers.AccountController.IsLoggedIn", null);
             this.loginStatusReceived(result.success);
         }
     }
@@ -38,7 +38,7 @@ export class LoginStore {
 
     @action
     logoutRequested = async () => {
-        await callApi("Account/Logout", {});
+        await callApi("Controllers.AccountController.Logout", null);
         this.loginStatusReceived(false);
     }
 
@@ -61,7 +61,7 @@ export class LoginStore {
 
     @action
     loginRequested = async () => {
-        const result = await callApi("Account/Login", { Username: this.loginDialogUsername, Password: this.loginDialogPassword });
+        const result = await callApi("Controllers.AccountController.Login", { username: this.loginDialogUsername, password: this.loginDialogPassword });
         this.loginStatusReceived(result.success);
     }
 

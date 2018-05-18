@@ -16,8 +16,9 @@ namespace WebShop
         public static void Main(string[] args)
         {
 
+            var file = Directory.GetCurrentDirectory().ToString() + @"\webapp\src\contracts.ts";
             var generate = new Generate();
-            generate.Run();
+            generate.Run(file);
 
             BuildWebHost(args).Run();
         }

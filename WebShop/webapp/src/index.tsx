@@ -6,6 +6,7 @@ import * as Inject from './Inject';
 import { AppStore } from './App/AppStore';
 import { LoginStore } from './Login/LoginStore';
 import App from './App/App';
+
 configure({
     enforceActions: true
 });

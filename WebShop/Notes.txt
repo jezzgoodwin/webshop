@@ -1,13 +1,8 @@
 ﻿
 
-single api http endpoint
- - use reflection to call c# endpoint
- - throw exceptions to report errors
-   - check exceptions work with async calls
+css in js
 
-typings from c# dto to typescript interfaces
- - use reflection
- - convert pascal case to camcel case
+lazy loading js
 
 ---
 

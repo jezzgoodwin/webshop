@@ -12,17 +12,19 @@ using Microsoft.EntityFrameworkCore;
 using WebShop.Contracts;
 using WebShop.Models;
 using WebShop.TypeReflect;
+using Microsoft.AspNetCore.Http;
 
 namespace WebShop.Controllers
 {
-    [Route("[controller]")]
-    public class AccountController : Controller
+    public class AccountController
     {
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContext DatabaseContext;
+        private readonly IHttpContextAccessor HttpContextAccessor;
 
-        public AccountController(DatabaseContext context)
+        public AccountController(DatabaseContext databaseContext, IHttpContextAccessor httpContextAccessor)
         {
-            _context = context;
+            DatabaseContext = databaseContext;
+            HttpContextAccessor = httpContextAccessor;
         }
 
         [Api]
@@ -35,7 +37,7 @@ namespace WebShop.Controllers
 
             if (credentials.Username != null && credentials.Username != "" && credentials.Password != null && credentials.Password != "")
             {
-                user = await _context.Users
+                user = await DatabaseContext.Users
                     .SingleOrDefaultAsync(x => x.Username == credentials.Username, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
                 if (user != null)
@@ -69,8 +71,8 @@ namespace WebShop.Controllers
                 UserId = user.Id,
                 Token = token
             };
-            _context.UserSessions.Add(session);
-            await _context.SaveChangesAsync(cancellationToken);
+            DatabaseContext.UserSessions.Add(session);
+            await DatabaseContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             if (session.Id == default(int))
@@ -94,7 +96,7 @@ namespace WebShop.Controllers
             {
             };
 
-            await HttpContext.SignInAsync(
+            await HttpContextAccessor.HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
@@ -106,10 +108,10 @@ namespace WebShop.Controllers
 
         }
 
-        [HttpGet("Create")]
-        public async Task<SuccessDto> Create(string Username, string Password, CancellationToken cancellationToken)
+        [Api]
+        public async Task<SuccessDto> Create(LoginDto credentials, CancellationToken cancellationToken)
         {
-            if (Username == null || Username == "" || Password == null || Password == "")
+            if (credentials.Username == null || credentials.Username == "" || credentials.Password == null || credentials.Password == "")
             {
                 return new SuccessDto
                 {
@@ -120,16 +122,16 @@ namespace WebShop.Controllers
             byte[] salt;
             new RNGCryptoServiceProvider().GetBytes(salt = new byte[16]);
 
-            var pbkdf2 = new Rfc2898DeriveBytes(Password, salt, 10000);
+            var pbkdf2 = new Rfc2898DeriveBytes(credentials.Password, salt, 10000);
             var hash = pbkdf2.GetBytes(20);
 
             var user = new User {
-                Username = Username,
+                Username = credentials.Username,
                 Password = Convert.ToBase64String(hash),
                 Salt = Convert.ToBase64String(salt)
             };
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync(cancellationToken);
+            DatabaseContext.Users.Add(user);
+            await DatabaseContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
 
             return new SuccessDto
@@ -139,10 +141,10 @@ namespace WebShop.Controllers
 
         }
 
-        [HttpGet("Logout")]
+        [Api]
         public async Task<SuccessDto> Logout()
         {
-            await HttpContext.SignOutAsync(
+            await HttpContextAccessor.HttpContext.SignOutAsync(
                     CookieAuthenticationDefaults.AuthenticationScheme);
 
             return new SuccessDto
@@ -151,12 +153,12 @@ namespace WebShop.Controllers
             };
         }
 
-        [HttpGet("IsLoggedIn")]
-        public SuccessDto IsLoggedIn()
+        [Api]
+        public async Task<SuccessDto> IsLoggedIn()
         {
             return new SuccessDto
             {
-                Success = HttpContext.User.Identity.IsAuthenticated
+                Success = HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated
             };
         }
 
