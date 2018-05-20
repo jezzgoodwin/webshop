@@ -2,12 +2,13 @@
 import { observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 import * as Inject from '../Inject';
-import { AppStore } from './AppStore';
-import LoginStatus from '../Login/Status';
-
+import AppStore from './AppStore';
+import HeaderProfile from '../User/HeaderProfile';
+import Page from '../Page/Page';
+import PopupBodyInsert from '../Popup/BodyInsert';
 
 const getInjects = (root: Inject.RootStore) => ({
-    appStore: root.get("appStore") as AppStore
+    appStore: root.get(AppStore)
 });
 
 type IProps = Readonly<{
@@ -15,23 +16,21 @@ type IProps = Readonly<{
 
 @observer
 @Inject.inject(getInjects)
-class App extends Inject.Component<Readonly<ReturnType<typeof getInjects>>, IProps> {
+export default class App extends Inject.Component<ReturnType<typeof getInjects>, IProps> {
+
+    onCreated() {
+        this.injects.appStore.appCreated();
+    }
+
     render() {
         return (
             <div>
-                Seconds passed: {this.injects.appStore.timer} &nbsp;
-                <button onClick={this.onReset}>
-                    Reset
-                </button>
-                <LoginStatus />
+                <HeaderProfile />
+                <Page />
+                <PopupBodyInsert />
                 <DevTools />
             </div>
         );
     }
 
-    onReset = () => {
-        this.injects.appStore.resetTimer();
-    }
-};
-
-export default App;
+}

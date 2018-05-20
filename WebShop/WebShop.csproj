@@ -14,10 +14,18 @@
     <None Remove="webapp\src\App\App.tsx" />
     <None Remove="webapp\src\App\AppStore.ts" />
     <None Remove="webapp\src\inject.ts" />
-    <None Remove="webapp\src\Login\LoginStore.ts" />
-    <None Remove="webapp\src\Login\Status.tsx" />
     <None Remove="webapp\src\misc\typingsTest.ts" />
     <None Remove="webapp\src\callApi.tsx" />
+    <None Remove="webapp\src\Page\Page.tsx" />
+    <None Remove="webapp\src\Page\PageStore.ts" />
+    <None Remove="webapp\src\Popup\BodyInsert.tsx" />
+    <None Remove="webapp\src\Popup\PopupContainer.tsx" />
+    <None Remove="webapp\src\Popup\PopupStore.ts" />
+    <None Remove="webapp\src\Product\Edit.tsx" />
+    <None Remove="webapp\src\Product\EditStore.ts" />
+    <None Remove="webapp\src\Product\Page.tsx" />
+    <None Remove="webapp\src\Product\Product.tsx" />
+    <None Remove="webapp\src\Product\ProductStore.tsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,10 +42,21 @@
     <TypeScriptCompile Include="webapp\src\App\App.tsx" />
     <TypeScriptCompile Include="webapp\src\App\AppStore.ts" />
     <TypeScriptCompile Include="webapp\src\Inject.ts" />
-    <TypeScriptCompile Include="webapp\src\Login\LoginStore.ts" />
-    <TypeScriptCompile Include="webapp\src\Login\Status.tsx" />
+    <TypeScriptCompile Include="webapp\src\Page\Page.tsx" />
+    <TypeScriptCompile Include="webapp\src\Page\PageStore.ts" />
+    <TypeScriptCompile Include="webapp\src\Product\Edit.tsx" />
+    <TypeScriptCompile Include="webapp\src\Product\EditStore.ts" />
+    <TypeScriptCompile Include="webapp\src\Product\Page.tsx" />
+    <TypeScriptCompile Include="webapp\src\Product\Product.tsx" />
+    <TypeScriptCompile Include="webapp\src\Product\ProductStore.tsx" />
+    <TypeScriptCompile Include="webapp\src\User\LoginStore.ts" />
+    <TypeScriptCompile Include="webapp\src\User\HeaderProfile.tsx" />
+    <TypeScriptCompile Include="webapp\src\User\StatusStore.ts" />
     <TypeScriptCompile Include="webapp\src\misc\typingsTest.ts" />
     <TypeScriptCompile Include="webapp\src\callApi.tsx" />
+    <TypeScriptCompile Include="webapp\src\Popup\BodyInsert.tsx" />
+    <TypeScriptCompile Include="webapp\src\Popup\PopupContainer.tsx" />
+    <TypeScriptCompile Include="webapp\src\Popup\PopupStore.ts" />
   </ItemGroup>
 
 </Project>

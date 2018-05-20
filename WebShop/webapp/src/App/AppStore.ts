@@ -1,21 +1,17 @@
-﻿import { observable, action } from 'mobx';
+﻿import { action } from 'mobx';
+import * as Inject from '../Inject';
+import StatusStore from '../User/StatusStore';
 
-export class AppStore {
-    @observable timer = 0;
+const getInjects = (root: Inject.RootStore) => ({
+    statusStore: root.get(StatusStore)
+});
 
-    constructor() {
-        setInterval(() => {
-            this.increaseTimer();
-        }, 1000);
-    }
-
-    @action
-    increaseTimer() {
-        this.timer += 1;
-    }
+@Inject.inject(getInjects)
+export default class AppStore extends Inject.Store<ReturnType<typeof getInjects>> {
 
     @action
-    resetTimer() {
-        this.timer = 0;
+    appCreated = async () => {
+        this.injects.statusStore.statusRequired();
     }
+
 }

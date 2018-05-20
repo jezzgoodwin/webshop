@@ -11,39 +11,54 @@ export function inject(injectFunc: (providers: any) => any) {
     }
 }
 
-export class Component<TInject, TProps> extends React.PureComponent<TProps> {
+export class Component<TInject, TProps> extends React.Component<TProps> {
     protected injects: TInject;
     constructor(props: any, context: any) {
         super(props, context);
         this.injects = (this as any).__proto__.constructor.injectFunc(context.mobxStores.rootStore);
+        this.onCreated();
+    }
+    protected onCreated() {
     }
 };
 
+export class Store<TInject> {
+    protected injects: TInject;
+    constructor(rootStore: any) {
+        this.injects = (this as any).__proto__.constructor.injectFunc(rootStore);
+    }
+}
+
+interface IInject<T> {
+    classType: { new(): T };
+    instance: T;
+}
+
 export class RootStore {
 
-    private injects: { [key: string]: any } = {};
+    private injects: IInject<any>[] = [];
 
-    set(key: string, value: any) {
-
-        // find injects
-        var cnst: string = value.toString();
-        var lb = cnst.split("(", 2);
-        var rb = lb[1].split(")", 2);
-        var parts = rb[0].split(",");
-        var words = parts.map(x => x.trim()).filter(x => x != "");
-
-        var injects = words.map(x => this.injects[x]);
-
-        // create object
-        var object = new value(...injects);
-        this.injects[key] = object;
+    private set<T>(classType: { new(rootStore?: RootStore): T }): void {
+        var instance = new classType(this);
+        this.injects.push({
+            classType,
+            instance
+        });
     }
 
-    get(key: string) {
-        return this.injects[key];
+    get<T>(classType: { new(rootStore?: RootStore): T }): T {
+        var inject = this.injects.find(x => x.classType === classType);
+        if (!inject) {
+            this.set(classType);
+            inject = this.injects.find(x => x.classType === classType);
+        }
+        return inject!.instance;
+    }
+
+    create<T>(classType: { new(rootStore?: RootStore): T }): T {
+        return new classType(this);
     }
 
 }
 
 export const instanceRootStore = new RootStore();
-export const set = (key: string, value: any) => instanceRootStore.set(key, value);

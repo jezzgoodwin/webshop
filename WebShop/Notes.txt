@@ -2,9 +2,7 @@
 
 css in js
 
-lazy loading js
-
----
+put checks in injector to ensure correct use of singleton/multi instance store
 
 image uploading / resizing
 
@@ -12,3 +10,5 @@ in memory caching (of some description)
  - session tokens
 
 signalr subscription (only for authenticated users)
+
+lazy loading js
