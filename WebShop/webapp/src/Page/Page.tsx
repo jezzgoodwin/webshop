@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import * as Inject from '../Inject';
 import PageStore from './PageStore';
 import ProductPage from '../Product/Page';
+import CategoryPage from '../Category/Page';
 
 const getInjects = (root: Inject.RootStore) => ({
     pageStore: root.get(PageStore)
@@ -18,9 +19,13 @@ export default class Page extends Inject.Component<ReturnType<typeof getInjects>
     render() {
         return (
             <div>
-                {this.injects.pageStore.page == "product" &&
-                    <ProductPage />
-                }
+                {this.injects.pageStore.page == "product" && (
+                    <div>
+                        <ProductPage />
+                        <br />
+                        <CategoryPage />
+                    </div>
+                )}
             </div>
         );
     }

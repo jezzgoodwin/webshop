@@ -9,7 +9,7 @@ const getInjects = (root: Inject.RootStore) => ({
 });
 
 type IProps = Readonly<{
-    product: Contracts.EditProductDto;
+    category: Contracts.EditCategoryDto;
 }>
 
 @observer
@@ -17,7 +17,7 @@ type IProps = Readonly<{
 export default class Edit extends Inject.Component<ReturnType<typeof getInjects>, IProps> {
 
     onCreated() {
-        this.injects.editStore.componentCreated(this.props.product);
+        this.injects.editStore.componentCreated(this.props.category);
     }
 
     render() {

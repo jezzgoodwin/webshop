@@ -1,6 +1,23 @@
 ﻿
 
+flesh out product
+ - categories
+ - image
+ - description
+ - price
+
+put category list on different page to products
+
+product list to be filterable by category
+
+full text search
+ - product name, product description, all category names
+
+---
+
 css in js
+
+csrf protection using additional header / checking origin/referer header
 
 put checks in injector to ensure correct use of singleton/multi instance store
 

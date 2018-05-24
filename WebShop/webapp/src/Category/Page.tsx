@@ -1,12 +1,12 @@
 ﻿import * as React from 'react';
 import { observer } from 'mobx-react';
 import * as Inject from '../Inject';
-import ProductStore from './ProductStore';
-import Product from './Product';
+import CategoryStore from './CategoryStore';
+import Category from './Category';
 import UserStatusStore from '../User/StatusStore';
 
 const getInjects = (root: Inject.RootStore) => ({
-    productStore: root.get(ProductStore),
+    categoryStore: root.get(CategoryStore),
     userStatusStore: root.get(UserStatusStore)
 });
 
@@ -18,22 +18,22 @@ type IProps = Readonly<{
 export default class Page extends Inject.Component<ReturnType<typeof getInjects>, IProps> {
 
     onCreated() {
-        this.injects.productStore.pageCreated();
+        this.injects.categoryStore.pageCreated();
     }
 
     render() {
         return (
             <div>
-                products
-                {this.injects.productStore.hasList && (
+                categories
+                {this.injects.categoryStore.hasList && (
                     <div>
-                        {this.injects.productStore.list.map(x => (
-                            <Product key={x.id} product={x} />
+                        {this.injects.categoryStore.list.map(x => (
+                            <Category key={x.id} category={x} />
                         ))}
                     </div>
                 )}
                 {this.injects.userStatusStore.isLoggedIn && (
-                    <button onClick={this.injects.productStore.newClicked}>
+                    <button onClick={this.injects.categoryStore.newClicked}>
                         new
                     </button>
                 )}

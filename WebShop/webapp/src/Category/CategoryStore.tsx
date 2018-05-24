@@ -13,11 +13,11 @@ const getInjects = (root: Inject.RootStore) => ({
 });
 
 @Inject.inject(getInjects)
-export default class ProductStore extends Inject.Store<ReturnType<typeof getInjects>> {
+export default class CategoryStore extends Inject.Store<ReturnType<typeof getInjects>> {
 
     @observable private isFetchingList: boolean = false;
     @observable hasList: boolean = false;
-    @observable list: ReadonlyArray<Contracts.ProductDto> = [];
+    @observable list: ReadonlyArray<Contracts.CategoryDto> = [];
 
     @action
     pageCreated = async () => {
@@ -29,7 +29,7 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
     listRequested = async () => {
         if (!this.isFetchingList) {
             this.isFetchingList = true;
-            var result = await callApi("Controllers.ProductController.GetAll", null);
+            var result = await callApi("Controllers.CategoryController.GetAll", null);
             runInAction(() => {
                 this.hasList = true;
                 this.list = result;
@@ -39,19 +39,19 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
     }
 
     @action
-    editClicked = (product: Contracts.ProductDto) => {
-        this.injects.popupStore.render = () => <Edit product={product} />;
+    editClicked = (category: Contracts.CategoryDto) => {
+        this.injects.popupStore.render = () => <Edit category={category} />;
     }
 
     @action
     newClicked = () => {
-        this.injects.popupStore.render = () => <Edit product={{ id: null, name: ""}} />
+        this.injects.popupStore.render = () => <Edit category={{ id: null, name: "" }} />
     }
 
     @action
     deleteClicked = (id: number) => {
         var confirm = async () => {
-            await callApi("Controllers.ProductController.Delete", { id });
+            await callApi("Controllers.CategoryController.Delete", { id });
             this.listRequested();
         };
         this.injects.dialogStore.confirmDialogRequested(confirm);

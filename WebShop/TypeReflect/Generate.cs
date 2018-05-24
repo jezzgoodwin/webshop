@@ -186,6 +186,12 @@ namespace WebShop.TypeReflect
             {
                 return "string";
             }
+            if (type.IsGenericType && Nullable.GetUnderlyingType(type) != null)
+            {
+                var genericTypes = type.GenericTypeArguments;
+                var inner = TypeName(genericTypes[0]);
+                return inner + " | null";
+            }
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
                 NeedsDictionary = true;

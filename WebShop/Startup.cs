@@ -51,7 +51,8 @@ namespace WebShop
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<CustomCookieAuthenticationEvents>();
             services.AddScoped<AccountController>();
-            services.AddScoped<ProductsController>();
+            services.AddScoped<ProductController>();
+            services.AddScoped<CategoryController>();
 
         }
 

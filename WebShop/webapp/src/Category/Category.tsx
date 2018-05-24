@@ -3,25 +3,25 @@ import { observer } from 'mobx-react';
 import * as Inject from '../Inject';
 import { Contracts } from '../contracts';
 import UserStatusStore from '../User/StatusStore';
-import ProductStore from './ProductStore';
+import CategoryStore from './CategoryStore';
 
 const getInjects = (root: Inject.RootStore) => ({
     userStatusStore: root.get(UserStatusStore),
-    productStore: root.get(ProductStore)
+    categoryStore: root.get(CategoryStore)
 });
 
 type IProps = Readonly<{
-    product: Contracts.ProductDto;
+    category: Contracts.CategoryDto;
 }>
 
 @observer
 @Inject.inject(getInjects)
-export default class Product extends Inject.Component<ReturnType<typeof getInjects>, IProps> {
+export default class Category extends Inject.Component<ReturnType<typeof getInjects>, IProps> {
 
     render() {
         return (
             <div>
-                {this.props.product.name}
+                Category = {this.props.category.name}
                 {this.injects.userStatusStore.isLoggedIn && (
                     <div>
                         <button onClick={this.editClicked}>
@@ -37,11 +37,11 @@ export default class Product extends Inject.Component<ReturnType<typeof getInjec
     }
 
     editClicked = () => {
-        this.injects.productStore.editClicked(this.props.product);
+        this.injects.categoryStore.editClicked(this.props.category);
     }
 
     deleteClicked = () => {
-        this.injects.productStore.deleteClicked(this.props.product.id);
+        this.injects.categoryStore.deleteClicked(this.props.category.id);
     }
 
 }

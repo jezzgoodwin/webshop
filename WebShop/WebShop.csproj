@@ -13,6 +13,13 @@
   <ItemGroup>
     <None Remove="webapp\src\App\App.tsx" />
     <None Remove="webapp\src\App\AppStore.ts" />
+    <None Remove="webapp\src\Category\Category.tsx" />
+    <None Remove="webapp\src\Category\CategoryStore.tsx" />
+    <None Remove="webapp\src\Category\Edit.tsx" />
+    <None Remove="webapp\src\Category\EditStore.tsx" />
+    <None Remove="webapp\src\Category\Page.tsx" />
+    <None Remove="webapp\src\Dialog\Confirm.tsx" />
+    <None Remove="webapp\src\Dialog\DialogStore.tsx" />
     <None Remove="webapp\src\inject.ts" />
     <None Remove="webapp\src\misc\typingsTest.ts" />
     <None Remove="webapp\src\callApi.tsx" />
@@ -41,6 +48,13 @@
   <ItemGroup>
     <TypeScriptCompile Include="webapp\src\App\App.tsx" />
     <TypeScriptCompile Include="webapp\src\App\AppStore.ts" />
+    <TypeScriptCompile Include="webapp\src\Category\Category.tsx" />
+    <TypeScriptCompile Include="webapp\src\Category\CategoryStore.tsx" />
+    <TypeScriptCompile Include="webapp\src\Category\Edit.tsx" />
+    <TypeScriptCompile Include="webapp\src\Category\EditStore.tsx" />
+    <TypeScriptCompile Include="webapp\src\Category\Page.tsx" />
+    <TypeScriptCompile Include="webapp\src\Dialog\Confirm.tsx" />
+    <TypeScriptCompile Include="webapp\src\Dialog\DialogStore.tsx" />
     <TypeScriptCompile Include="webapp\src\Inject.ts" />
     <TypeScriptCompile Include="webapp\src\Page\Page.tsx" />
     <TypeScriptCompile Include="webapp\src\Page\PageStore.ts" />
