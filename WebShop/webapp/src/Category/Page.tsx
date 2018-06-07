@@ -28,7 +28,7 @@ export default class Page extends Inject.Component<ReturnType<typeof getInjects>
                 {this.injects.categoryStore.hasList && (
                     <div>
                         {this.injects.categoryStore.list.map(x => (
-                            <Category key={x.id} category={x} />
+                            <Category key={x.id!} category={x} />
                         ))}
                     </div>
                 )}

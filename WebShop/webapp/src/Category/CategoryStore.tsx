@@ -45,7 +45,7 @@ export default class CategoryStore extends Inject.Store<ReturnType<typeof getInj
 
     @action
     newClicked = () => {
-        this.injects.popupStore.render = () => <Edit category={{ id: null, name: "" }} />
+        this.injects.popupStore.render = () => <Edit category={{ name: "" }} />
     }
 
     @action

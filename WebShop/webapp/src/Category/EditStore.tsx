@@ -13,11 +13,11 @@ const getInjects = (root: Inject.RootStore) => ({
 @Inject.inject(getInjects)
 export default class EditStore extends Inject.Store<ReturnType<typeof getInjects>> {
 
-    @observable id: number | null = null;
+    @observable id?: number = undefined;
     @observable name: string = "";
 
     @action
-    componentCreated = (product: Contracts.EditProductDto) => {
+    componentCreated = (product: Contracts.ProductDto) => {
         this.id = product.id;
         this.name = product.name;
     }

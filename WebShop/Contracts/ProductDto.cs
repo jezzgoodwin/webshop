@@ -10,11 +10,11 @@ namespace WebShop.Contracts
     public class ProductDto
     {
 
-        public int Id { get; set; }
+        public int? Id { get; set; }
         public string Name { get; set; }
 
         [Optional]
-        public List<CategoryDto> Categories { get; set; }
+        public List<int> Categories { get; set; }
 
     }
 }

@@ -41,7 +41,7 @@ export default class Product extends Inject.Component<ReturnType<typeof getInjec
     }
 
     deleteClicked = () => {
-        this.injects.productStore.deleteClicked(this.props.product.id);
+        this.injects.productStore.deleteClicked(this.props.product.id!);
     }
 
 }

@@ -45,7 +45,7 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
 
     @action
     newClicked = () => {
-        this.injects.popupStore.render = () => <Edit product={{ id: null, name: ""}} />
+        this.injects.popupStore.render = () => <Edit product={{ name: "" }} />
     }
 
     @action

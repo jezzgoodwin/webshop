@@ -33,7 +33,7 @@ namespace WebShop.Controllers
         }
 
         [Api]
-        public async Task<SaveDto> Save(EditCategoryDto input, CancellationToken cancellationToken)
+        public async Task<SaveDto> Save(CategoryDto input, CancellationToken cancellationToken)
         {
             Category category;
             if (input.Id.HasValue)

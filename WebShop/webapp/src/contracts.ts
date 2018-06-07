@@ -1,14 +1,6 @@
 export namespace Contracts {
     export interface CategoryDto {
-        readonly id: number;
-        readonly name: string;
-    }
-    export interface EditCategoryDto {
-        readonly id: number | null;
-        readonly name: string;
-    }
-    export interface EditProductDto {
-        readonly id: number | null;
+        readonly id?: number;
         readonly name: string;
     }
     export interface IdDto {
@@ -19,9 +11,9 @@ export namespace Contracts {
         readonly password: string;
     }
     export interface ProductDto {
-        readonly id: number;
+        readonly id?: number;
         readonly name: string;
-        readonly categories?: ReadonlyArray<Contracts.CategoryDto>;
+        readonly categories?: ReadonlyArray<number>;
     }
     export interface SaveDto {
         readonly id: number;
@@ -52,7 +44,7 @@ export type ApiMap = {
         result: ReadonlyArray<Contracts.CategoryDto>
     },
     "Controllers.CategoryController.Save": {
-        query: Contracts.EditCategoryDto,
+        query: Contracts.CategoryDto,
         result: Contracts.SaveDto
     },
     "Controllers.CategoryController.Delete": {
@@ -64,7 +56,7 @@ export type ApiMap = {
         result: ReadonlyArray<Contracts.ProductDto>
     },
     "Controllers.ProductController.Save": {
-        query: Contracts.EditProductDto,
+        query: Contracts.ProductDto,
         result: Contracts.SaveDto
     },
     "Controllers.ProductController.Delete": {

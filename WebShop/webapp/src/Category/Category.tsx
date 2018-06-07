@@ -41,7 +41,7 @@ export default class Category extends Inject.Component<ReturnType<typeof getInje
     }
 
     deleteClicked = () => {
-        this.injects.categoryStore.deleteClicked(this.props.category.id);
+        this.injects.categoryStore.deleteClicked(this.props.category.id!);
     }
 
 }

@@ -36,11 +36,7 @@ namespace WebShop.Controllers
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Categories = product.ProductCategoryJunctions.Select(junction => new CategoryDto()
-                    {
-                        Id = junction.Category.Id,
-                        Name = junction.Category.Name
-                    })
+                    Categories = product.ProductCategoryJunctions.Select(junction => junction.Category.Id)
                     .ToList()
                 })
                 .ToList();
@@ -48,12 +44,13 @@ namespace WebShop.Controllers
         }
 
         [Api]
-        public async Task<SaveDto> Save(EditProductDto input, CancellationToken cancellationToken)
+        public async Task<SaveDto> Save(ProductDto input, CancellationToken cancellationToken)
         {
             Product product;
             if (input.Id.HasValue)
             {
                 product = await DatabaseContext.Products
+                        .Include(x => x.ProductCategoryJunctions)
                         .SingleAsync(x => x.Id == input.Id, cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
             }
@@ -64,6 +61,29 @@ namespace WebShop.Controllers
             }
 
             product.Name = input.Name;
+
+            // categories
+            var remainingCategories = input.Categories.ToHashSet();
+            foreach (var junction in product.ProductCategoryJunctions)
+            {
+                if (remainingCategories.Contains(junction.CategoryId))
+                {
+                    remainingCategories.Remove(junction.CategoryId);
+                }
+                else
+                {
+                    DatabaseContext.ProductCategoryJunctions.Remove(junction);
+                }
+            }
+            foreach (var categoryId in remainingCategories)
+            {
+                var junction = new ProductCategoryJunction
+                {
+                    Product = product,
+                    CategoryId = categoryId
+                };
+                product.ProductCategoryJunctions.Add(junction);
+            }
 
             await DatabaseContext.SaveChangesAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();

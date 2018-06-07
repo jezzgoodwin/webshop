@@ -22,6 +22,17 @@ namespace WebShop.TypeReflect
         }
     }
 
+    class TypeInfo
+    {
+        public string Text { get; }
+        public bool Optional { get; }
+        public TypeInfo(string text, bool optional = false)
+        {
+            Text = text;
+            Optional = optional;
+        }
+    }
+
     public class Generate
     {
 
@@ -63,12 +74,13 @@ namespace WebShop.TypeReflect
                 var props = dto.GetProperties();
                 foreach (var prop in props)
                 {
+                    var info = TypeName(prop.PropertyType);
                     var line = "readonly " + ToCamel(prop.Name);
-                    if (prop.GetCustomAttributes(typeof(Optional), false).Length > 0)
+                    if (info.Optional || prop.GetCustomAttributes(typeof(Optional), false).Length > 0)
                     {
                         line += "?";
                     }
-                    line += ": " + TypeName(prop.PropertyType) + ";";
+                    line += ": " + info.Text + ";";
                     AddLine(0, line);
                 }
                 CloseDef();
@@ -102,14 +114,14 @@ namespace WebShop.TypeReflect
                         }
                          else
                         {
-                            query = TypeName(first);
+                            query = TypeName(first).Text;
                         }
                     }
 
                     var result = "";
                     if (api.ReturnType.IsGenericType)
                     {
-                        result = TypeName(api.ReturnType.GenericTypeArguments.First());
+                        result = TypeName(api.ReturnType.GenericTypeArguments.First()).Text;
                     }
                     else
                     {
@@ -172,42 +184,42 @@ namespace WebShop.TypeReflect
             AddLine(-1, "}");
         }
 
-        private string TypeName(Type type)
+        private TypeInfo TypeName(Type type)
         {
             if (type.Equals(typeof(bool)))
             {
-                return "boolean";
+                return new TypeInfo("boolean");
             }
              if (type.Equals(typeof(int)) || type.Equals(typeof(decimal)))
             {
-                return "number";
+                return new TypeInfo("number");
             }
             if (type.Equals(typeof(string)))
             {
-                return "string";
+                return new TypeInfo("string");
             }
             if (type.IsGenericType && Nullable.GetUnderlyingType(type) != null)
             {
                 var genericTypes = type.GenericTypeArguments;
-                var inner = TypeName(genericTypes[0]);
-                return inner + " | null";
+                var inner = TypeName(genericTypes[0]).Text;
+                return new TypeInfo(inner, true);
             }
             if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Dictionary<,>))
             {
                 NeedsDictionary = true;
                 var genericTypes = type.GenericTypeArguments;
-                var inner = TypeName(genericTypes[1]);
-                return "ReadonlyDictionary<" + inner + ">";
+                var inner = TypeName(genericTypes[1]).Text;
+                return new TypeInfo("ReadonlyDictionary<" + inner + ">");
             }
             if (type.IsGenericType && (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || type.GetGenericTypeDefinition() == typeof(List<>)))
             {
                 var genericTypes = type.GenericTypeArguments;
-                var inner = TypeName(genericTypes[0]);
-                return "ReadonlyArray<" + inner + ">";
+                var inner = TypeName(genericTypes[0]).Text;
+                return new TypeInfo("ReadonlyArray<" + inner + ">");
             }
             if (type.FullName.Substring(0, BaseName.Length) == BaseName)
             {
-                return RemoveBase(type.FullName);
+                return new TypeInfo(RemoveBase(type.FullName));
             }
             throw new Exception("TypeReflect: Cannot workout type name " + type.FullName);
         }

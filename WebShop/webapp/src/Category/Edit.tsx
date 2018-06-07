@@ -9,7 +9,7 @@ const getInjects = (root: Inject.RootStore) => ({
 });
 
 type IProps = Readonly<{
-    category: Contracts.EditCategoryDto;
+    category: Contracts.CategoryDto;
 }>
 
 @observer

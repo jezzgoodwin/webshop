@@ -1,7 +1,6 @@
 ﻿
 
 flesh out product
- - categories
  - image
  - description
  - price
