@@ -17,12 +17,16 @@ export default class EditStore extends Inject.Store<ReturnType<typeof getInjects
 
     @observable id?: number = undefined;
     @observable name: string = "";
+    @observable price: string = "";
+    @observable description: string = "";
     selectedCategories = observable.map<number, boolean>();
 
     @action
     componentCreated = (product: Contracts.ProductDto) => {
         this.id = product.id;
         this.name = product.name;
+        this.price = product.price.toString();
+        this.description = product.description;
         if (product.categories)
             product.categories.forEach(x => this.selectedCategories.set(x, true));
         this.injects.categoryStore.listRequested();
@@ -31,6 +35,16 @@ export default class EditStore extends Inject.Store<ReturnType<typeof getInjects
     @action
     nameChanged = (event: React.FormEvent<HTMLInputElement>) => {
         this.name = event.currentTarget.value;
+    }
+
+    @action
+    priceChanged = (event: React.FormEvent<HTMLInputElement>) => {
+        this.price = event.currentTarget.value;
+    }
+
+    @action
+    descriptionChanged = (event: React.FormEvent<HTMLInputElement>) => {
+        this.description = event.currentTarget.value;
     }
 
     @action
@@ -43,11 +57,16 @@ export default class EditStore extends Inject.Store<ReturnType<typeof getInjects
 
     @action
     saveClicked = async () => {
+        var price = parseFloat(this.price);
+        if (isNaN(price))
+            price = 0;
         await callApi(
             "Controllers.ProductController.Save",
             {
                 id: this.id,
                 name: this.name,
+                price: price,
+                description: this.description,
                 categories: Array.from(this.selectedCategories.keys())
             });
         runInAction(() => {

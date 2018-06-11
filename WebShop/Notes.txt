@@ -2,8 +2,6 @@
 
 flesh out product
  - image
- - description
- - price
 
 put category list on different page to products
 
@@ -13,6 +11,8 @@ full text search
  - product name, product description, all category names
 
 ---
+
+basic virtualized scroll
 
 css in js
 

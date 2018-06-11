@@ -32,7 +32,9 @@ export default class Edit extends Inject.Component<ReturnType<typeof getInjects>
             <div>
                 {this.isReady && (
                     <div>
-                        Name: <input type="text" value={this.injects.editStore.name} onChange={this.injects.editStore.nameChanged} />
+                        Name: <input type="text" value={this.injects.editStore.name} onChange={this.injects.editStore.nameChanged} /><br />
+                        Price: <input type="text" value={this.injects.editStore.price} onChange={this.injects.editStore.priceChanged} /><br />
+                        Description: <input type="text" value={this.injects.editStore.description} onChange={this.injects.editStore.descriptionChanged} /><br />
                         <ul>
                             {this.injects.categoryStore.list.map(x => (
                                 <div key={x.id!} onClick={() => this.injects.editStore.categoryClicked(x.id!)}>

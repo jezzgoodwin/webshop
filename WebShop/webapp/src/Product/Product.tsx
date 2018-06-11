@@ -27,6 +27,9 @@ export default class Product extends Inject.Component<ReturnType<typeof getInjec
                         <button onClick={this.editClicked}>
                             edit
                         </button>
+                        <button onClick={this.imageUploadClicked}>
+                            image
+                        </button>
                         <button onClick={this.deleteClicked}>
                             delete
                         </button>
@@ -38,6 +41,10 @@ export default class Product extends Inject.Component<ReturnType<typeof getInjec
 
     editClicked = () => {
         this.injects.productStore.editClicked(this.props.product);
+    }
+
+    imageUploadClicked = () => {
+        this.injects.productStore.imageUploadClicked(this.props.product);
     }
 
     deleteClicked = () => {

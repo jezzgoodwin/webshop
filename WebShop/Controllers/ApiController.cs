@@ -16,7 +16,7 @@ namespace WebShop.Controllers
     {
         private string Prepend { get; } = "WebShop.";
 
-        [HttpGet("call")]
+        [HttpPost("call")]
         public async Task<IActionResult> Call(string name, string json, CancellationToken cancellationToken)
         {
 

@@ -6,6 +6,7 @@ import callApi from '../callApi';
 import PopupStore from '../Popup/PopupStore';
 import DialogStore from '../Dialog/DialogStore';
 import Edit from './Edit';
+import ImageUpload from './ImageUpload';
 
 const getInjects = (root: Inject.RootStore) => ({
     popupStore: root.get(PopupStore),
@@ -17,7 +18,7 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
 
     @observable private isFetchingList: boolean = false;
     @observable hasList: boolean = false;
-    @observable list: ReadonlyArray<Contracts.ProductDto> = [];
+    @observable.shallow list: ReadonlyArray<Contracts.ProductDto> = [];
 
     @action
     pageCreated = async () => {
@@ -45,7 +46,7 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
 
     @action
     newClicked = () => {
-        this.injects.popupStore.render = () => <Edit product={{ name: "" }} />
+        this.injects.popupStore.render = () => <Edit product={{ name: "", price: 0, description: "" }} />
     }
 
     @action
@@ -55,6 +56,11 @@ export default class ProductStore extends Inject.Store<ReturnType<typeof getInje
             this.listRequested();
         };
         this.injects.dialogStore.confirmDialogRequested(confirm);
+    }
+
+    @action
+    imageUploadClicked = (product: Contracts.ProductDto) => {
+        this.injects.popupStore.render = () => <ImageUpload product={product} />;
     }
 
 }

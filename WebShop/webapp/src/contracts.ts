@@ -13,6 +13,8 @@ export namespace Contracts {
     export interface ProductDto {
         readonly id?: number;
         readonly name: string;
+        readonly price: number;
+        readonly description: string;
         readonly categories?: ReadonlyArray<number>;
     }
     export interface SaveDto {

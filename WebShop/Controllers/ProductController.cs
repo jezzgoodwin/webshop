@@ -36,8 +36,11 @@ namespace WebShop.Controllers
                 {
                     Id = product.Id,
                     Name = product.Name,
-                    Categories = product.ProductCategoryJunctions.Select(junction => junction.Category.Id)
-                    .ToList()
+                    Price = product.Price,
+                    Description = product.Description,
+                    Categories = product.ProductCategoryJunctions
+                        .Select(junction => junction.Category.Id)
+                        .ToList()
                 })
                 .ToList();
 
@@ -61,6 +64,8 @@ namespace WebShop.Controllers
             }
 
             product.Name = input.Name;
+            product.Price = input.Price;
+            product.Description = input.Description;
 
             // categories
             var remainingCategories = input.Categories.ToHashSet();

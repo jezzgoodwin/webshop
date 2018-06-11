@@ -17,7 +17,7 @@ export default class EditStore extends Inject.Store<ReturnType<typeof getInjects
     @observable name: string = "";
 
     @action
-    componentCreated = (product: Contracts.ProductDto) => {
+    componentCreated = (product: Contracts.CategoryDto) => {
         this.id = product.id;
         this.name = product.name;
     }

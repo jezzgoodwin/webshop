@@ -13,8 +13,13 @@ namespace WebShop
 {
     public class Program
     {
+        public static string UploadFolder { get; set; }
+
         public static void Main(string[] args)
         {
+
+            var contentRoot = Directory.GetCurrentDirectory();
+            UploadFolder = Path.Combine(Path.Combine(contentRoot, "uploads"));
 
             var file = Directory.GetCurrentDirectory().ToString() + @"\webapp\src\contracts.ts";
             var generate = new Generate();
